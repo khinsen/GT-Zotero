@@ -16,6 +16,27 @@ Class {
 	#category : #Zotero
 }
 
+{ #category : #configuration }
+ZtLibrary class >> configurationFile [
+	| directory file |
+	directory := FileLocator preferences / 'GT-Zotero'.
+	directory ensureCreateDirectory.
+	file := directory / 'configuration.v1.ston'.
+	file exists ifFalse: [
+		file writeStreamDo: [ :s |
+			STON put: (Dictionary new) onStream:  s] ].
+	^ file
+]
+
+{ #category : #accessing }
+ZtLibrary class >> configureStorage: aZtLocalStorage [
+	| configuration |
+	configuration := Dictionary
+		with: #localStorage -> aZtLocalStorage directory fullName.
+	self configurationFile writeStreamDo: [ :s |
+		STON put: configuration onStream: s ]
+]
+
 { #category : #accessing }
 ZtLibrary >> buildTreeFor: entities [
 	| treeIndex tree orphanTreeNode |
@@ -136,7 +157,8 @@ ZtLibrary >> gtOrphanedItemsFor: aView [
 ZtLibrary >> initialize [
 	version := 0.
 	collections := Dictionary new.
-	items := Dictionary new
+	items := Dictionary new.
+	self loadConfiguration
 ]
 
 { #category : #initializing }
@@ -156,6 +178,15 @@ ZtLibrary >> initializeFromRawData: aDictionary [
 { #category : #accessing }
 ZtLibrary >> itemTree [
 	^ itemTree
+]
+
+{ #category : #configuration }
+ZtLibrary >> loadConfiguration [
+	| configuration |
+	configuration := self class configurationFile readStreamDo: [ :s |
+		STON fromStream: s ].
+	configuration at: #localStorage
+		ifPresent: [ :path | storage := ZtLocalStorage directory:path asFileReference ]
 ]
 
 { #category : #initializing }

@@ -28,3 +28,12 @@ ZtLocalStorage >> directory: aFileReference [
 ZtLocalStorage >> directoryForKey: aString [
 	^ directory / aString
 ]
+
+{ #category : #accessing }
+ZtLocalStorage >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		<< $(;
+		<< self directory fullName;
+		<< $)
+]
