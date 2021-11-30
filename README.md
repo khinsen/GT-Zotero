@@ -45,9 +45,9 @@ The first time you open a library, all items in it will be downloaded, which mig
 The Zotero desktop client keeps copies of all the file attachments, which are normally not stored in the Zotero Web account. Under Linux and macOS, the default location of the directory is `${HOME}/Zotero/storage`. GT-Zotero can access this storage, providing one-click access to the attachments, after an additional configuration step in the playground:
 
 ```
-myAccount := ZtUser username: 'my-user-name'.
-myLibrary := myAccount library.
-myStorage := ZtLocalStorage directory:
-	(FileLocator home / 'Zotero' / 'storage').
-myLibrary storage: myStorage.
+ZtLibrary configureStorage:
+	(ZtLocalStorage directory:
+		(FileLocator home / 'Zotero' / 'storage'))
 ```
+
+The next time you open a library, it will use the configured storage by default.
