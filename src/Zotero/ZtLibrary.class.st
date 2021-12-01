@@ -250,6 +250,11 @@ ZtLibrary >> multiRequest: path [
 	^ dataItems
 ]
 
+{ #category : #selecting }
+ZtLibrary >> reject: aBlock [
+	^ (ZtItemGroup new itemTree:  self itemTree) reject: aBlock
+]
+
 { #category : #organizing }
 ZtLibrary >> replaceKeysIn: aTreeNode from: entities [
 	| entity |
@@ -272,6 +277,11 @@ ZtLibrary >> saveToCache [
 			with: #items -> (items values collect: #rawData).
 	self cacheFile writeStreamDo: [ :s |
 		STON put: data onStream: s ]
+]
+
+{ #category : #selecting }
+ZtLibrary >> select: aBlock [
+	^ (ZtItemGroup new itemTree:  self itemTree) select: aBlock
 ]
 
 { #category : #accessing }

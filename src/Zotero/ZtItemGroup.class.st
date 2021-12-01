@@ -29,3 +29,25 @@ ZtItemGroup >> itemTree [
 ZtItemGroup >> itemTree: aSequenceableCollection [
 	itemTree := aSequenceableCollection
 ]
+
+{ #category : #printing }
+ZtItemGroup >> printOn: aStream [
+	super printOn: aStream.
+	aStream nextPut: $(.
+	self itemTree size printOn: aStream.
+	aStream nextPutAll: ' items)'
+]
+
+{ #category : #selecting }
+ZtItemGroup >> reject: aBlock [
+	^ ZtItemGroup new
+		itemTree: (self itemTree reject: [ :each |
+						aBlock value: each first ])
+]
+
+{ #category : #selecting }
+ZtItemGroup >> select: aBlock [
+	^ ZtItemGroup new
+		itemTree: (self itemTree select: [ :each |
+						aBlock value: each first ])
+]

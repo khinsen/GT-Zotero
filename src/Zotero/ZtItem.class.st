@@ -195,7 +195,7 @@ ZtItem >> parentKey [
 	^ (rawData at: #data) at: #parentItem ifAbsent: [ nil ]
 ]
 
-{ #category : #accessing }
+{ #category : #printing }
 ZtItem >> printOn: aStream [
 	super printOn: aStream.
 	aStream
@@ -234,4 +234,16 @@ ZtItem >> url [
 	^ (rawData at: #data) at: #url
 		ifPresent: [ :url | url ifEmpty: [ nil ] ifNotEmpty: [ url ] ]
 		ifAbsent: [ nil ]
+]
+
+{ #category : #accessing }
+ZtItem >> year [
+	"Very heuristic: the first four-digit sequence in the date is interpreted as a year."
+	| digitParser yearParser year |
+	^ self date ifNotNil: [ :date |
+		digitParser := #digit asPParser.
+		yearParser := (digitParser, digitParser, digitParser, digitParser)
+					==> [ :node | ('' join: node) asInteger ].
+		year := yearParser sea parse: date.
+		year isPetit2Failure ifTrue: [ nil ] ifFalse: [ year second ] ]
 ]

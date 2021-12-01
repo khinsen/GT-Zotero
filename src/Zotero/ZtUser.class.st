@@ -142,6 +142,15 @@ ZtUser >> loadCredentials [
 			apiToken := c at: #apiToken ]
 ]
 
+{ #category : #printing }
+ZtUser >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		<< $(;
+		<< self username;
+		<< $)
+]
+
 { #category : #accessing }
 ZtUser >> storeCredentials [
 	| credentials |
