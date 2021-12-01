@@ -37,6 +37,12 @@ ZtLibrary class >> configureStorage: aZtLocalStorage [
 		STON put: configuration onStream: s ]
 ]
 
+{ #category : #converting }
+ZtLibrary >> asItemGroup [
+	^ ZtItemGroup new
+		itemTree: self itemTree
+]
+
 { #category : #accessing }
 ZtLibrary >> buildTreeFor: entities [
 	| treeIndex tree orphanTreeNode |
@@ -136,7 +142,7 @@ ZtLibrary >> gtItemsFor: aView [
 	^ aView forward
 		  title: 'Items';
 		  priority: 1;
-		  object: [ ZtItemGroup new itemTree: self itemTree ];
+		  object: [ self asItemGroup ];
 		  view: #gtItemsFor:;
 		  yourself
 ]
@@ -151,6 +157,18 @@ ZtLibrary >> gtOrphanedItemsFor: aView [
 		  object: [ ZtItemGroup new itemTree: orphanedItemTree ];
 		  view: #gtItemsFor:;
 		  yourself
+]
+
+{ #category : #inspecting }
+ZtLibrary >> gtSpotterForTitlesFor: aStep [
+	<gtSearch>
+	^ self asItemGroup gtSpotterForTitlesFor: aStep
+]
+
+{ #category : #inspecting }
+ZtLibrary >> gtSpotterForYearsFor: aStep [
+	<gtSearch>
+	^ self asItemGroup gtSpotterForYearsFor: aStep
 ]
 
 { #category : #accessing }
@@ -252,7 +270,7 @@ ZtLibrary >> multiRequest: path [
 
 { #category : #selecting }
 ZtLibrary >> reject: aBlock [
-	^ (ZtItemGroup new itemTree:  self itemTree) reject: aBlock
+	^ self asItemGroup reject: aBlock
 ]
 
 { #category : #organizing }
@@ -281,7 +299,7 @@ ZtLibrary >> saveToCache [
 
 { #category : #selecting }
 ZtLibrary >> select: aBlock [
-	^ (ZtItemGroup new itemTree:  self itemTree) select: aBlock
+	^ self asItemGroup select: aBlock
 ]
 
 { #category : #accessing }

@@ -7,15 +7,33 @@ Class {
 	#category : #Zotero
 }
 
+{ #category : #converting }
+ZtCollection >> asItemGroup [
+	^ ZtItemGroup new
+		itemTree: self itemTree
+]
+
 { #category : #inspecting }
 ZtCollection >> gtItemsFor: aView [
 	<gtView>
 	^ aView forward
 		  title: 'Items';
 		  priority: 1;
-		  object: [ ZtItemGroup new itemTree: self itemTree ];
+		  object: [ self asItemGroup ];
 		  view: #gtItemsFor:;
 		  yourself
+]
+
+{ #category : #inspecting }
+ZtCollection >> gtSpotterForTitlesFor: aStep [
+	<gtSearch>
+	^ self asItemGroup gtSpotterForTitlesFor: aStep
+]
+
+{ #category : #inspecting }
+ZtCollection >> gtSpotterForYearsFor: aStep [
+	<gtSearch>
+	^ self asItemGroup gtSpotterForYearsFor: aStep
 ]
 
 { #category : #inspecting }
