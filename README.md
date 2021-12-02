@@ -1,5 +1,7 @@
 # A Zotero client for [Glamorous Toolkit](https://gtoolkit.com/)
 
+![screenshot](https://github.com/khinsen/GT-Zotero/raw/main/GT-Zotero.png)
+
 ## Installation
 
 1. Launch Glamorous Toolkit and open a Playground.
