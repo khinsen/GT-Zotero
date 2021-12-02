@@ -8,7 +8,7 @@
 2. Paste the following lines into the playground and run them
 ```
 Metacello new
-    baseline: 'Zotero;
+    baseline: 'Zotero';
     repository: 'github://khinsen/GT-Zotero:main/src';
     load.
 ```
