@@ -39,6 +39,11 @@ ZtGroupLibrary >> groupId [
 ]
 
 { #category : #accessing }
+ZtGroupLibrary >> name [
+	^ self group name
+]
+
+{ #category : #accessing }
 ZtGroupLibrary >> urlPrefix [
 	^ urlPrefix ifNil: [ urlPrefix := 'groups/', group groupId asString ]
 ]

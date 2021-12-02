@@ -61,6 +61,7 @@ ZtLibrary >> buildTreeFor: entities [
 					second add: treeNode ] ].
 	tree do: [ :each |
 		self replaceKeysIn: each from: entities ].
+	tree sort: [ :a :b | a first summary <= b first summary ].
 	orphanTreeNode second do: [ :each |
 		self replaceKeysIn: each from: entities ].
 	^ { tree. orphanTreeNode second }
@@ -266,6 +267,20 @@ ZtLibrary >> multiRequest: path [
 				asInteger.
 	dataItems size < itemCount ] whileTrue.
 	^ dataItems
+]
+
+{ #category : #printing }
+ZtLibrary >> name [
+	self subclassResponsibility
+]
+
+{ #category : #printing }
+ZtLibrary >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		<< $(;
+		<< self name;
+		<< $)
 ]
 
 { #category : #selecting }

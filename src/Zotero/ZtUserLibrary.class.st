@@ -24,6 +24,11 @@ ZtUserLibrary >> cacheDirectory [
 ]
 
 { #category : #accessing }
+ZtUserLibrary >> name [
+	^ self user username
+]
+
+{ #category : #accessing }
 ZtUserLibrary >> urlPrefix [
 	^ urlPrefix ifNil: [ urlPrefix := 'users/', user userId asString ]
 ]

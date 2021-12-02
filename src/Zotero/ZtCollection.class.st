@@ -88,3 +88,8 @@ ZtCollection >> printOn: aStream [
 		<< self numberOfItems printString;
 		<< ' items)'
 ]
+
+{ #category : #accessing }
+ZtCollection >> summary [
+	^ self name
+]
