@@ -16,6 +16,11 @@ ZtSchema >> cacheFile [
 	^ directory / 'schema.ston'
 ]
 
+{ #category : #accessing }
+ZtSchema >> creatorFields [
+	^ creatorFields
+]
+
 { #category : #initialization }
 ZtSchema >> getCreatorFields [
 	creatorFields :=
@@ -59,15 +64,17 @@ ZtSchema >> getItemTypes [
 { #category : #initialization }
 ZtSchema >> getTypeItemFields [
 	itemTypes keysAndValuesDo: [ :eachItemType :eachDictionary |
+		| validFields |
+		validFields := OrderedCollection new.
+		eachDictionary at: #validFields put: validFields.
 		(ZtApiClient new
 			beOneShot;
 			path: 'itemTypeFields?itemType=', eachItemType;
 			get) do: [ :eachFieldData |
-				eachDictionary
-					at: #validFields
-					put: (Dictionary
-							with: #field -> (eachFieldData at: #field)
-							with: #localized -> (eachFieldData at: #localized)) ] ]
+				validFields add:
+					(Dictionary
+						with: #field -> (eachFieldData at: #field)
+						with: #localized -> (eachFieldData at: #localized) ) ] ]
 ]
 
 { #category : #initialization }
@@ -79,6 +86,11 @@ ZtSchema >> initialize [
 		self getItemTypeCreatorTypes.
 		self getCreatorFields.
 		self storeInCache ]
+]
+
+{ #category : #accessing }
+ZtSchema >> itemTypes [
+	^ itemTypes
 ]
 
 { #category : #persistence }
