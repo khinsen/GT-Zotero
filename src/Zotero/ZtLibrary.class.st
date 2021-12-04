@@ -342,7 +342,7 @@ ZtLibrary >> syncWithServer [
 			key := each at: #key.
 			Transcript nextPutAll: 'Updating: '; nextPutAll: key asString; cr.
 			entity := collections at: key
-						ifAbsent: (ZtCollection new library: self).
+						ifAbsentPut: (ZtCollection new library: self).
 			entity rawData: each ] ].
 
 	Transcript cr; nextPutAll: 'Items'; cr.
@@ -359,7 +359,7 @@ ZtLibrary >> syncWithServer [
 			key := each at: #key.
 			Transcript nextPutAll: 'Updating: '; nextPutAll: key asString; cr.
 			entity := items at: key
-						ifAbsent: (ZtItem new library: self) .
+						ifAbsentPut: (ZtItem new library: self) .
 			entity rawData: each ] ].
 
 	versionFromLastRequest > version ifTrue: [
