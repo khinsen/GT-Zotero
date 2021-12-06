@@ -11,7 +11,8 @@ Class {
 		'collections',
 		'collectionTree',
 		'itemTree',
-		'orphanedItemTree'
+		'orphanedItemTree',
+		'creatorIndex'
 	],
 	#category : #Zotero
 }
@@ -172,6 +173,18 @@ ZtLibrary >> gtSpotterForYearsFor: aStep [
 	^ self asItemGroup gtSpotterForYearsFor: aStep
 ]
 
+{ #category : #initializing }
+ZtLibrary >> indexByCreator [
+	creatorIndex := Dictionary new.
+	itemTree do: [ :anItemTreeNode |
+		| anItem |
+		anItem := anItemTreeNode first.
+		anItem creators do: [ :aCreator |
+			(creatorIndex at: aCreator name
+				ifAbsentPut: OrderedCollection new)
+				add: anItemTreeNode ] ]
+]
+
 { #category : #accessing }
 ZtLibrary >> initialize [
 	version := 0.
@@ -219,7 +232,8 @@ ZtLibrary >> loadData [
 	orphanedItemTree := treeData second.
 	treeData := self buildTreeFor: collections.
 	collectionTree := treeData first.
-	self assert: treeData second size equals: 0
+	self assert: treeData second size equals: 0.
+	self indexByCreator.
 ]
 
 { #category : #accessing }

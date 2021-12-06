@@ -2,10 +2,18 @@ Class {
 	#name : #ZtCreator,
 	#superclass : #Object,
 	#instVars : [
-		'rawData'
+		'rawData',
+		'name'
 	],
 	#category : #Zotero
 }
+
+{ #category : #comparing }
+ZtCreator >> = anObject [
+	^ anObject class == self class
+		and: [ anObject creatorType = self creatorType
+				and: [ anObject name = self name ] ]
+]
 
 { #category : #accessing }
 ZtCreator >> creatorType [
@@ -24,14 +32,26 @@ ZtCreator >> gtJsonDataFor: aView [
 ]
 
 { #category : #accessing }
+ZtCreator >> hash [
+	^ self name hash
+]
+
+{ #category : #accessing }
 ZtCreator >> isAuthor [
 	^ self creatorType = #author
 ]
 
 { #category : #accessing }
 ZtCreator >> name [
-	^ rawData at: #name
-		ifAbsent: [ (rawData at: #lastName), ', ', (rawData at: #firstName) ]
+	^ name ifNil: [
+		name := rawData at: #name
+			ifAbsent: [
+				| firstName lastName |
+				firstName := rawData at: #firstName.
+				lastName := rawData at: #lastName.
+				firstName
+					ifNotEmpty: [ lastName , ', ' , firstName ]
+					ifEmpty: [ lastName ] ] ]
 ]
 
 { #category : #accessing }

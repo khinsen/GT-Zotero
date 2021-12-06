@@ -23,7 +23,7 @@ ZtItem >> creators [
 	^ (rawData at: #data) at: #creators
 		ifPresent: [ :creators | creators collect: [ :each |
 						ZtCreator new rawData: each ] ]
-		ifAbsent: [ nil ]
+		ifAbsent: [ Array new ]
 ]
 
 { #category : #accessing }
@@ -96,15 +96,15 @@ ZtItem >> gtCollectionsFor: aView [
 { #category : #inspecting }
 ZtItem >> gtCreatorsFor: aView [
 	<gtView>
-	| creators |
-	creators := self creators.
-	creators ifNil: [ ^ aView empty ].
-	creators ifEmpty: [ ^ aView empty ].
-	^ aView list
-		title: 'Creators';
-		priority: 6;
-		items: [ creators ];
-		yourself
+	^ self creators
+		ifEmpty: [ aView empty ]
+		ifNotEmpty: [ :creators |
+			aView list
+				title: 'Creators';
+				priority: 6;
+				items: [ creators ];
+				itemText: #name;
+				yourself ]
 ]
 
 { #category : #inspecting }
