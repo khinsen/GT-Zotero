@@ -25,6 +25,12 @@ ZtCollection >> gtItemsFor: aView [
 ]
 
 { #category : #inspecting }
+ZtCollection >> gtSpotterForCreatorsFor: aStep [
+	<gtSearch>
+	^ self asItemGroup gtSpotterForCreatorsFor: aStep
+]
+
+{ #category : #inspecting }
 ZtCollection >> gtSpotterForTitlesFor: aStep [
 	<gtSearch>
 	^ self asItemGroup gtSpotterForTitlesFor: aStep

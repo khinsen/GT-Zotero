@@ -184,6 +184,12 @@ ZtLibrary >> gtOrphanedItemsFor: aView [
 ]
 
 { #category : #inspecting }
+ZtLibrary >> gtSpotterForCreatorsFor: aStep [
+	<gtSearch>
+	^ self asItemGroup gtSpotterForCreatorsFor: aStep
+]
+
+{ #category : #inspecting }
 ZtLibrary >> gtSpotterForTitlesFor: aStep [
 	<gtSearch>
 	^ self asItemGroup gtSpotterForTitlesFor: aStep

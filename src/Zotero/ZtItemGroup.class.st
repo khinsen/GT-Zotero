@@ -22,6 +22,30 @@ ZtItemGroup >> gtItemsFor: aView [
 ]
 
 { #category : #inspecting }
+ZtItemGroup >> gtSpotterForCreatorsFor: aStep [
+	<gtSearch>
+	^ aStep listProcessor
+		priority: 2;
+		title: 'Creators';
+		allCandidates: [
+			| byCreator |
+			byCreator := Dictionary new.
+			itemTree do: [ :eachNode |
+				eachNode first creators do: [ :eachCreator|
+					(byCreator at: eachCreator name
+						ifAbsentPut: [ OrderedCollection new ])
+						add: eachNode ] ].
+			byCreator associations collect: [ :each |
+				ZtItemGroup new
+					itemTree: each value;
+					label: each key;
+					yourself ] ];
+		filter: GtFilterSubstring;
+		candidatesLimit: 5;
+		itemName: #label
+]
+
+{ #category : #inspecting }
 ZtItemGroup >> gtSpotterForTitlesFor: aStep [
 	<gtSearch>
 	^ aStep listProcessor
@@ -37,7 +61,7 @@ ZtItemGroup >> gtSpotterForTitlesFor: aStep [
 ZtItemGroup >> gtSpotterForYearsFor: aStep [
 	<gtSearch>
 	^ aStep listProcessor
-		priority: 2;
+		priority: 3;
 		title: 'Years';
 		allCandidates: [
 			(itemTree groupedBy: [ :each | each first year ])
