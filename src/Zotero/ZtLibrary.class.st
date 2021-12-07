@@ -12,7 +12,8 @@ Class {
 		'collectionTree',
 		'itemTree',
 		'orphanedItemTree',
-		'creatorIndex'
+		'creatorItems',
+		'creators'
 	],
 	#category : #Zotero
 }
@@ -139,6 +140,27 @@ ZtLibrary >> gtCollectionsFor: aView [
 ]
 
 { #category : #inspecting }
+ZtLibrary >> gtCreatorsFor: aView [
+	<gtView>
+	items ifEmpty: [ ^ aView empty ].
+	^ aView columnedList
+		title: 'Creators';
+		priority: 4;
+		items: [ creators ];
+		column: #Name text: [ :each | each ];
+		column: 'Items' text: [ :each |
+			| n |
+			n := (creatorItems at: each) size.
+			n = 0 ifTrue: [ '' ] ifFalse: [ n printString ] ];
+		send: [ :each |
+			ZtItemGroup new
+				itemTree: (creatorItems at: each);
+				label: each;
+				yourself ];
+		yourself
+]
+
+{ #category : #inspecting }
 ZtLibrary >> gtItemsFor: aView [
 	<gtView>
 	^ aView forward
@@ -175,14 +197,16 @@ ZtLibrary >> gtSpotterForYearsFor: aStep [
 
 { #category : #initializing }
 ZtLibrary >> indexByCreator [
-	creatorIndex := Dictionary new.
+	creatorItems := Dictionary new.
 	itemTree do: [ :anItemTreeNode |
 		| anItem |
 		anItem := anItemTreeNode first.
 		anItem creators do: [ :aCreator |
-			(creatorIndex at: aCreator name
+			(creatorItems at: aCreator name
 				ifAbsentPut: OrderedCollection new)
-				add: anItemTreeNode ] ]
+				add: anItemTreeNode ] ].
+	creators := creatorItems keys
+					sort: [ :a :b | a first <= b first ]
 ]
 
 { #category : #accessing }
