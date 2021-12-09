@@ -374,39 +374,45 @@ ZtLibrary >> storage: aZtStorage [
 { #category : #syncing }
 ZtLibrary >> syncWithServer [
 	| currentVersions keysToUpdate updates |
+	Transcript cr;
+		nextPutAll: 'Syncing ';
+		nextPutAll: self printString;
+		nextPutAll: ', currently at version ';
+		nextPutAll: version printString;
+		cr.
 	Transcript cr; nextPutAll: 'Collections'; cr.
 	currentVersions := self versionsFromServerForPath: '/collections?'.
-	Transcript nextPutAll: currentVersions asString; cr.
 	keysToUpdate := self update: collections from: currentVersions.
-	Transcript nextPutAll: 'Keys: '; nextPutAll: keysToUpdate asString; cr.
+	Transcript nextPutAll: 'Keys to update: '; nextPutAll: keysToUpdate printString; cr.
 	keysToUpdate ifNotEmpty: [
 		updates := self multiRequest: ('/collections?collectionKey=',( ',' join: keysToUpdate)).
 		updates do: [ :each |
-			| key entity |
-			key := each at: #key.
-			Transcript nextPutAll: 'Updating: '; nextPutAll: key asString; cr.
-			entity := collections at: key
+			| entity |
+			entity := collections at: (each at: #key)
 						ifAbsentPut: (ZtCollection new library: self).
-			entity rawData: each ] ].
+			entity rawData: each.
+			Transcript nextPutAll: 'Updated: '; nextPutAll: entity printString; cr ] ].
 
 	Transcript cr; nextPutAll: 'Items'; cr.
 	currentVersions := self versionsFromServerForPath: '/items?'.
-	Transcript nextPutAll: currentVersions asString; cr.
 	keysToUpdate := self update: items from: currentVersions.
-	Transcript nextPutAll: 'Keys: '; nextPutAll: keysToUpdate asString; cr.
+	Transcript nextPutAll: 'Keys to update: '; nextPutAll: keysToUpdate printString; cr.
 	keysToUpdate ifNotEmpty: [
 		| requestPath |
 		requestPath := '/items?itemKey=', (',' join: keysToUpdate).
 		updates := self multiRequest: requestPath.
 		updates do: [ :each |
-			| key entity |
-			key := each at: #key.
-			Transcript nextPutAll: 'Updating: '; nextPutAll: key asString; cr.
-			entity := items at: key
+			| entity |
+			entity := items at: (each at: #key)
 						ifAbsentPut: (ZtItem new library: self) .
-			entity rawData: each ] ].
+			entity rawData: each.
+			Transcript nextPutAll: 'Updated: '; nextPutAll: entity printString; cr ] ].
 
 	versionFromLastRequest > version ifTrue: [
+		Transcript cr;
+			nextPutAll: 'Library updated to version ';
+			nextPutAll: versionFromLastRequest printString;
+			cr.
 		version := versionFromLastRequest.
 		self saveToCache ]
 ]

@@ -168,16 +168,24 @@ ZtUser >> storeCredentials [
 { #category : #syncing }
 ZtUser >> syncGroupsWithServer [
 	| versions forDeletion |
+	Transcript cr; nextPutAll: 'Syncing groups for '; nextPutAll: self printString; cr.
 	versions := self groupVersionsFromServer.
 	forDeletion := OrderedCollection new.
 	groups do: [ :each |
 		versions at: (each groupId asString)
-			ifPresent: [ :v | each syncWithServerAtVersion: v ]
+			ifPresent: [ :v |
+				Transcript nextPutAll: 'Updating '; nextPutAll: each printString; cr.
+				each syncWithServerAtVersion: v ]
 			ifAbsent: [ forDeletion add: each ].
 		versions removeKey: each groupId asString ].
-	forDeletion do: [ :each | groups remove: each ].
+	forDeletion do: [ :each |
+		Transcript nextPutAll: 'Removing '; nextPutAll: each printString; cr.
+		groups remove: each ].
 	versions associationsDo: [ :each |
-		groups add: (self groupFromServer: each key asInteger) ]
+		| group |
+		group := self groupFromServer: each key asInteger.
+		Transcript nextPutAll: 'Adding '; nextPutAll: group printString; cr.
+		groups add: group ]
 ]
 
 { #category : #accessing }
