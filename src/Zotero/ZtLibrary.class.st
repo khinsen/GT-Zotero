@@ -297,12 +297,9 @@ ZtLibrary >> multiRequest: path [
 	| dataItems client itemCount |
 	dataItems := OrderedCollection new.
 	[
-		Transcript nextPutAll: 'multiRequest: '; nextPutAll: path; cr.
 		client := self clientForRequest: path start: dataItems size limit: 100.
 		dataItems addAll: client get.
 		itemCount := (client response headers at: 'Total-Results') asInteger.
-		Transcript nextPutAll: 'itemCount: '; nextPutAll: itemCount asString; cr.
-		Transcript nextPutAll: 'dataItems size: '; nextPutAll: (dataItems size) asString; cr.
 		versionFromLastRequest :=
 			(client response headers at: 'Last-Modified-Version')
 				asInteger.
