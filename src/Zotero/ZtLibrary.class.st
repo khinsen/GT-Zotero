@@ -102,10 +102,7 @@ ZtLibrary >> collectionWithKey: aCollectionKey [
 
 { #category : #accessing }
 ZtLibrary >> collections [
-	^ (self multiRequest: '/collections') collect: [ :each |
-			ZtCollection new
-				library: self;
-				rawData: each ]
+	^ collections
 ]
 
 { #category : #initializing }
