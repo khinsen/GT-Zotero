@@ -30,7 +30,7 @@ With these two pieces of information, execute the following lines (after substit
 	storeCredentials
 ```
 
-You have to do this only once, your credentials are stored for future use in `FileLocator preferences / ;GT-Zotero' / 'credentials.v1.ston'`.
+You have to do this only once, your credentials are stored for future use in `FileLocator preferences / 'GT-Zotero' / 'credentials.v1.ston'`.
 
 Once your credentials are stored, you can access your Zotero data by inspecting the result of
 
