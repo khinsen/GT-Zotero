@@ -17,9 +17,10 @@ ZtUser class >> username: aString [
 	| user |
 	user :=  ZtUser new
 		username: aString;
-		loadCredentials.
+		loadCredentials;
+		loadFromCache.
 	user hasCredentials
-		ifTrue: [ user syncGroupsWithServer].
+		ifTrue: [ user syncGroupsWithServer ].
 	^ user
 ]
 
@@ -31,6 +32,19 @@ ZtUser >> apiToken [
 { #category : #accessing }
 ZtUser >> apiToken: aString [
 	apiToken := aString
+]
+
+{ #category : #persistence }
+ZtUser >> cacheDirectory [
+	| directory |
+	directory := FileLocator home / '.cache' / 'GT-Zotero' / self userId asString.
+	directory ensureCreateDirectory.
+	^ directory
+]
+
+{ #category : #persistence }
+ZtUser >> cacheFile [
+	^ self cacheDirectory / 'groups.ston'
 ]
 
 { #category : #authentication }
@@ -142,6 +156,20 @@ ZtUser >> loadCredentials [
 			apiToken := c at: #apiToken ]
 ]
 
+{ #category : #persistence }
+ZtUser >> loadFromCache [
+	| data |
+	self cacheFile exists ifFalse: [ ^ self ].
+	data := self cacheFile readStreamDo: [ :s | STON fromStream: s ].
+	self assert: (data at: #version) equals: 1.
+	(data at: #groups) do: [ :eachRawData |
+		| group |
+		group := ZtGroup new
+			accessingMember: self;
+			rawData: eachRawData.
+		groups add: group ]
+]
+
 { #category : #printing }
 ZtUser >> printOn: aStream [
 	super printOn: aStream.
@@ -151,7 +179,16 @@ ZtUser >> printOn: aStream [
 		<< $)
 ]
 
-{ #category : #accessing }
+{ #category : #persistence }
+ZtUser >> saveToCache [
+	| data |
+	data := Dictionary with: #version -> 1.
+	data at: #groups put: (self groups collect: #rawData).
+	self cacheFile writeStreamDo: [ :s |
+		STON put: data onStream: s  ]
+]
+
+{ #category : #authentication }
 ZtUser >> storeCredentials [
 	| credentials |
 	credentials := self credentialFile readStreamDo: [ :s |
@@ -174,8 +211,11 @@ ZtUser >> syncGroupsWithServer [
 	groups do: [ :each |
 		versions at: (each groupId asString)
 			ifPresent: [ :v |
-				Transcript nextPutAll: 'Updating '; nextPutAll: each printString; cr.
-				each syncWithServerAtVersion: v ]
+				each version = v ifFalse: [
+					| group |
+					group := self groupFromServer: v.
+					Transcript nextPutAll: 'Updating '; nextPutAll: each printString; cr.
+					each rawData: group rawData ] ]
 			ifAbsent: [ forDeletion add: each ].
 		versions removeKey: each groupId asString ].
 	forDeletion do: [ :each |
@@ -183,9 +223,10 @@ ZtUser >> syncGroupsWithServer [
 		groups remove: each ].
 	versions associationsDo: [ :each |
 		| group |
-		group := self groupFromServer: each key asInteger.
+		group := self groupFromServer: each key.
 		Transcript nextPutAll: 'Adding '; nextPutAll: group printString; cr.
-		groups add: group ]
+		groups add: group ].
+	self saveToCache
 ]
 
 { #category : #accessing }

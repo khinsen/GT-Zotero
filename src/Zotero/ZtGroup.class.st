@@ -18,6 +18,14 @@ ZtGroup >> accessingMember: aZtUser [
 	accessingMember := aZtUser
 ]
 
+{ #category : #persistence }
+ZtGroup >> cacheDirectory [
+	| directory |
+	directory := FileLocator home / '.cache' / 'GT-Zotero' / self groupId asString.
+	directory ensureCreateDirectory.
+	^ directory
+]
+
 { #category : #accessing }
 ZtGroup >> groupId [
 	^ rawData at: #id
@@ -42,8 +50,7 @@ ZtGroup >> printOn: aStream [
 		<< $)
 ]
 
-{ #category : #syncing }
-ZtGroup >> syncWithServerAtVersion: anInteger [
-	(rawData at: #version) = anInteger ifTrue: [ ^ self ].
-	self notYetImplemented
+{ #category : #accessing }
+ZtGroup >> version [
+	^ (rawData at: #version) asInteger
 ]

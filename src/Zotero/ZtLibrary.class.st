@@ -69,7 +69,7 @@ ZtLibrary >> buildTreeFor: entities [
 	^ { tree. orphanTreeNode second }
 ]
 
-{ #category : #accessing }
+{ #category : #persistence }
 ZtLibrary >> cacheDirectory [
 	self subclassResponsibility
 ]

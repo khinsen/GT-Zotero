@@ -15,12 +15,9 @@ ZtUserLibrary class >> user: aZtUser [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : #persistence }
 ZtUserLibrary >> cacheDirectory [
-	| directory |
-	directory := FileLocator home / '.cache' / 'GT-Zotero' / self userId asString.
-	directory ensureCreateDirectory.
-	^ directory
+	^ self user cacheDirectory
 ]
 
 { #category : #accessing }

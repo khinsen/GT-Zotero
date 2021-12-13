@@ -17,10 +17,7 @@ ZtGroupLibrary class >> group: aZtGroup [
 
 { #category : #accessing }
 ZtGroupLibrary >> cacheDirectory [
-	| directory |
-	directory := FileLocator home / '.cache' / 'GT-Zotero' / self groupId asString.
-	directory ensureCreateDirectory.
-	^ directory
+	^ self group cacheDirectory
 ]
 
 { #category : #accessing }
