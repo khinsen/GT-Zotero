@@ -331,11 +331,12 @@ ZtLibrary >> replaceKeysIn: aTreeNode from: entities [
 	| entity |
 	entity := entities at: aTreeNode first.
 	aTreeNode at: 1 put: entity.
-	"It seems that in group libraries, the number of children can be greater than
-	 the number of child items actually present, so the test below fails."
-	self
-		assert: entity numberOfChildren
-		equals: aTreeNode second size.
+	"The number of children can be greater than the number of
+	 child items actually present, e.g. when a child item has
+	 been moved to the trash."
+	self assert:
+		entity numberOfChildren
+			>= aTreeNode second size.
 	aTreeNode second do: [ :each | self replaceKeysIn: each from: entities ]
 ]
 
