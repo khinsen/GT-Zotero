@@ -48,6 +48,21 @@ ZtItem >> fileDirectory [
 ]
 
 { #category : #inspecting }
+ZtItem >> gtActionOpenAlexFor: anAction [
+	<gtAction>
+	| button |
+	self doi ifNil: [ ^ anAction noAction ].
+	^ anAction explicit stencil: [
+		button := BrButton new.
+		button
+			aptitude: BrGlamorousButtonWithIconAptitude;
+			action:  [ button phlow spawnObject:
+						(OAClient new doi: self doi) ];
+			icon: OAClient new oaIcon asElement;
+			label: 'OpenAlex record' ]
+]
+
+{ #category : #inspecting }
 ZtItem >> gtActionWebBrowseFor: anAction [
 	<gtAction>
 	|  button |
