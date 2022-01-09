@@ -184,7 +184,7 @@ ZtItem >> markdownSummary [
 				<< '**DOI:** [';
 				<< doi;
 				<< '](http://dx.doi.org/';
-				<< doi;
+				<< doi urlEncoded;
 				<< ')';
 				cr ].
 		self url ifNotNil: [ :url |
