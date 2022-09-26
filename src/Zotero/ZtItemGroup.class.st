@@ -22,56 +22,54 @@ ZtItemGroup >> gtItemsFor: aView [
 ]
 
 { #category : #inspecting }
-ZtItemGroup >> gtSpotterForCreatorsFor: aStep [
+ZtItemGroup >> gtSpotterForCreatorsFor: aSearch [
 	<gtSearch>
-	^ aStep listProcessor
+	^ aSearch list
 		priority: 2;
 		title: 'Creators';
-		allCandidates: [
-			| byCreator |
+		items: [ | byCreator |
 			byCreator := Dictionary new.
-			itemTree do: [ :eachNode |
-				eachNode first creators do: [ :eachCreator|
-					(byCreator at: eachCreator name
-						ifAbsentPut: [ OrderedCollection new ])
-						add: eachNode ] ].
-			byCreator associations collect: [ :each |
-				ZtItemGroup new
-					itemTree: each value;
-					label: each key;
-					yourself ] ];
-		filter: GtFilterSubstring;
-		candidatesLimit: 5;
+			itemTree
+				do: [ :eachNode | 
+					eachNode first creators
+						do: [ :eachCreator | 
+							(byCreator at: eachCreator name ifAbsentPut: [ OrderedCollection new ])
+								add: eachNode ] ].
+			byCreator associations
+				collect: [ :each | 
+					ZtItemGroup new
+						itemTree: each value;
+						label: each key;
+						yourself ] ];
+		filterBySubstring;
 		itemName: #label
 ]
 
 { #category : #inspecting }
-ZtItemGroup >> gtSpotterForTitlesFor: aStep [
+ZtItemGroup >> gtSpotterForTitlesFor: aSearch [
 	<gtSearch>
-	^ aStep listProcessor
+	^ aSearch list
 		priority: 1;
 		title: 'Titles';
-		allCandidates: [ itemTree collect: #first ];
-		filter: GtFilterSubstring;
-		candidatesLimit: 10;
-		itemName: #title
+		items: [ itemTree collect: #first ];
+		filterBySubstring;
+		itemName: #title;
+		filter: (GtSpotterSubstringFilter new itemString: #title)
 ]
 
 { #category : #inspecting }
-ZtItemGroup >> gtSpotterForYearsFor: aStep [
+ZtItemGroup >> gtSpotterForYearsFor: aSearch [
 	<gtSearch>
-	^ aStep listProcessor
+	^ aSearch list
 		priority: 3;
 		title: 'Years';
-		allCandidates: [
-			(itemTree groupedBy: [ :each | each first year ])
-				associations collect: [ :each |
+		items: [ (itemTree groupedBy: [ :each | each first year ]) associations
+				collect: [ :each | 
 					ZtItemGroup new
 						itemTree: each value;
 						label: each key asString;
 						yourself ] ];
-		filter: GtFilterSubstring;
-		candidatesLimit: 5;
+		filterBySubstring;
 		itemName: #label
 ]
 
