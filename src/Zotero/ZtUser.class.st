@@ -213,7 +213,7 @@ ZtUser >> syncGroupsWithServer [
 			ifPresent: [ :v |
 				each version = v ifFalse: [
 					| group |
-					group := self groupFromServer: v.
+					group := self groupFromServer: each groupId.
 					Transcript nextPutAll: 'Updating '; nextPutAll: each printString; cr.
 					each rawData: group rawData ] ]
 			ifAbsent: [ forDeletion add: each ].
